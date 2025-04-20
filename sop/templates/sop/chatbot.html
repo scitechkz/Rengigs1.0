@@ -2,18 +2,8 @@
 <html lang="en" class="">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>SOP Chatbot</title>
-
-    <!-- Theme Loader (Prevents Flicker) -->
-    <script>
-        (function () {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-            }
-        })();
-    </script>
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -37,100 +27,116 @@
     </script>
 
     <style>
-        .chat-bubble {
-            max-width: 80%;
-            padding: 12px 18px;
-            border-radius: 1rem;
-            margin: 6px;
-        }
-
-        .user-message {
-            background-color: #4f46e5;
-            color: white;
-            align-self: flex-end;
-        }
-
-        .bot-message {
-            background-color: #e5e7eb;
-            color: black;
-            align-self: flex-start;
-        }
-
-        .dark .bot-message {
-            background-color: #374151;
-            color: white;
-        }
-
-        .typing-indicator span {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background-color: gray;
-            border-radius: 50%;
-            margin: 0 1px;
-            animation: blink 1s infinite;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes blink {
-            0%, 80%, 100% {
-                opacity: 0;
-            }
-            40% {
-                opacity: 1;
-            }
-        }
+        .chat-bubble { max-width: 80%; padding: 12px 18px; border-radius: 1rem; margin: 6px; }
+        .user-message { background-color: #4f46e5; color: white; align-self: flex-end; }
+        .bot-message { background-color: #e5e7eb; color: black; align-self: flex-start; }
+        .dark .bot-message { background-color: #374151; color: white; }
+        .typing-indicator span { display: inline-block; width: 6px; height: 6px; background-color: gray; border-radius: 50%; margin: 0 1px; animation: blink 1s infinite; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
     </style>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-black dark:text-white flex flex-col h-screen font-sans">
 
+    <!-- Prevent Flicker -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') document.documentElement.classList.add('dark');
+        })();
+    </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-black dark:text-white flex flex-col h-screen font-sans">
     <!-- Header -->
-    <header class="p-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-center shadow-md relative">
-        <h1 class="text-2xl font-bold">SOP Chatbot 🤖</h1>
-        <button id="darkToggle" class="absolute top-3 right-3 bg-white dark:bg-gray-700 text-black dark:text-white p-2 rounded-full shadow hover:scale-110 transition duration-300">
-            🌓
-        </button>
+    <header class="p-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md relative flex justify-between items-center">
+        <h1 id="title" class="text-2xl font-bold">SOP Chatbot 🤖</h1>
+
+        <div class="flex space-x-3 items-center">
+            <select id="lang-select" class="bg-white dark:bg-gray-700 text-black dark:text-white p-1 rounded">
+                <option value="en">🇬🇧 English</option>
+                <option value="yo">🗣️ Yoruba</option>
+                <option value="ha">🗣️ Hausa</option>
+                <option value="ig">🗣️ Igbo</option>
+            </select>
+            <button id="darkToggle" class="bg-white dark:bg-gray-700 text-black dark:text-white p-2 rounded-full hover:scale-110 transition">
+                🌓
+            </button>
+        </div>
     </header>
 
-    <!-- Chat Container -->
+    <!-- Chat -->
     <main id="chatbox" class="flex-1 p-4 flex flex-col space-y-3 overflow-y-auto">
         <div class="chat-bubble bot-message flex items-start space-x-2">
             <img src="https://i.pravatar.cc/30?img=3" alt="Bot" class="rounded-full w-6 h-6">
-            <div>👋 Hi! How can I assist you with SOPs today?</div>
+            <div id="bot-greeting">👋 Hi! How can I assist you with SOPs today?</div>
         </div>
     </main>
 
-    <!-- Input Section -->
+    <!-- Input -->
     <footer class="p-4 bg-white dark:bg-gray-800 shadow-md flex items-center">
         <input type="text" id="user-input" placeholder="Ask a question..." required
-               class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
-        <button id="ask-button"
-                class="ml-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
-            Ask
-        </button>
-        <button id="voice-button"
-                class="ml-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            🎤
-        </button>
+               class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
+        <button id="ask-button" class="ml-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">Ask</button>
+        <button id="voice-button" class="ml-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">🎤</button>
     </footer>
 
-    <!-- Chat Response -->
-    <div id="chat-response" class="p-4 hidden"></div>
-
-    <!-- Back to Home -->
+    <!-- Home -->
     <div class="text-center p-2">
-        <a href="{% url 'home' %}" class="text-purple-600 hover:underline dark:text-purple-400">← Back to Home</a>
+        <a href="{% url 'home' %}" class="text-purple-600 hover:underline dark:text-purple-400" id="back-home">← Back to Home</a>
     </div>
 
-    <!-- Scripts -->
     <script>
+        const translations = {
+            en: {
+                title: "SOP Chatbot 🤖",
+                bot_greeting: "👋 Hi! How can I assist you with SOPs today?",
+                placeholder: "Ask a question...",
+                ask: "Ask",
+                back: "← Back to Home"
+            },
+            yo: {
+                title: "Ẹ̀rọ ìbánisọ̀rọ̀ SOP 🤖",
+                bot_greeting: "👋 Bàwo! Báwo ni mo ṣe le ràn é l'ọ́wọ́ pẹ̀lú SOP lónìí?",
+                placeholder: "Bèrè ìbéèrè...",
+                ask: "Bèrè",
+                back: "← Padà sí Ilé"
+            },
+            ha: {
+                title: "Na'urar Tattaunawa SOP 🤖",
+                bot_greeting: "👋 Sannu! Ta yaya zan iya taimaka maka da SOPs yau?",
+                placeholder: "Tambayi tambaya...",
+                ask: "Tambaya",
+                back: "← Komawa Gida"
+            },
+            ig: {
+                title: "Ngwa Mkparịta ụka SOP 🤖",
+                bot_greeting: "👋 Ndewo! Kedu ka m ga-esi nyere gị aka na SOP taa?",
+                placeholder: "Jụọ ajụjụ...",
+                ask: "Jụọ",
+                back: "← Laghachi n'ụlọ"
+            }
+        };
+
+        function applyTranslation(lang) {
+            const t = translations[lang] || translations.en;
+            document.getElementById("title").textContent = t.title;
+            document.getElementById("bot-greeting").textContent = t.bot_greeting;
+            document.getElementById("user-input").placeholder = t.placeholder;
+            document.getElementById("ask-button").textContent = t.ask;
+            document.getElementById("back-home").textContent = t.back;
+        }
+
+        // Initialize language
+        const savedLang = localStorage.getItem("lang") || "en";
+        document.getElementById("lang-select").value = savedLang;
+        applyTranslation(savedLang);
+
+        document.getElementById("lang-select").addEventListener("change", (e) => {
+            const lang = e.target.value;
+            localStorage.setItem("lang", lang);
+            applyTranslation(lang);
+        });
+
+        // Send message
         const chatbox = document.getElementById("chatbox");
         const userInputElem = document.getElementById("user-input");
         let isVoiceInput = false;
@@ -138,15 +144,13 @@
         async function sendMessage(userInput) {
             if (!userInput) return alert("Please enter a question!");
 
-            // Add user message
             const userMessage = document.createElement("div");
             userMessage.className = "chat-bubble user-message self-end flex items-center space-x-2";
             userMessage.innerHTML = `<div>${userInput}</div><img src="https://i.pravatar.cc/30?img=5" alt="You" class="rounded-full w-6 h-6">`;
             chatbox.appendChild(userMessage);
 
-            // Bot typing animation
             const typing = document.createElement("div");
-            typing.className = "chat-bubble bot-message flex items-center space-x-2 typing";
+            typing.className = "chat-bubble bot-message flex items-center space-x-2";
             typing.innerHTML = `<img src="https://i.pravatar.cc/30?img=3" class="rounded-full w-6 h-6"><div class="typing-indicator"><span></span><span></span><span></span></div>`;
             chatbox.appendChild(typing);
             chatbox.scrollTop = chatbox.scrollHeight;
@@ -160,17 +164,15 @@
 
                 const result = await response.json();
                 if (result.response) {
-                    const botResponse = result.response;
                     setTimeout(() => {
                         typing.remove();
                         const botMessage = document.createElement("div");
                         botMessage.className = "chat-bubble bot-message flex items-start space-x-2";
-                        botMessage.innerHTML = `<img src="https://i.pravatar.cc/30?img=3" class="rounded-full w-6 h-6"><div>${botResponse}</div>`;
+                        botMessage.innerHTML = `<img src="https://i.pravatar.cc/30?img=3" class="rounded-full w-6 h-6"><div>${result.response}</div>`;
                         chatbox.appendChild(botMessage);
-
-                        if (isVoiceInput) speakResponse(botResponse);
+                        if (isVoiceInput) speakResponse(result.response);
                         chatbox.scrollTop = chatbox.scrollHeight;
-                    }, 600); // slight delay to mimic typing
+                    }, 600);
                 } else {
                     alert("Error: " + result.error);
                 }
@@ -182,14 +184,12 @@
             userInputElem.value = "";
         }
 
-        // Text button
         document.getElementById("ask-button").addEventListener("click", () => {
             const userInput = userInputElem.value.trim();
             isVoiceInput = false;
             sendMessage(userInput);
         });
 
-        // Voice input
         document.getElementById("voice-button").addEventListener("click", () => {
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = "en-US";
@@ -202,7 +202,6 @@
             recognition.start();
         });
 
-        // Text to Speech
         function speakResponse(text) {
             const utter = new SpeechSynthesisUtterance(text);
             utter.lang = "en-US";
