@@ -2,7 +2,7 @@
 # Use an official Python runtime as a base image
 FROM python:3.11
 # Set the working directory
-WORKDIR /app
+WORKDIR /app/sopchatbot
 # Copy project files to the container
 COPY . /app/
 # Install dependencies
