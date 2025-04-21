@@ -6,7 +6,8 @@ WORKDIR /app
 # Copy project files to the container
 COPY . /app/
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+#RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 # Collect static files
 RUN python manage.py collectstatic --noinput
 # Expose port 8000 for Django
